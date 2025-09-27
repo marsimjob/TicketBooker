@@ -155,6 +155,8 @@
 
             for (int line = 0; line < height; line++)
             {
+                // Set a bar 1 from top 1 from the
+                // bottom to give it a titcket look
                 if (line == 0)
                 {
                     // Top border
@@ -162,7 +164,7 @@
                     Console.Write(new string(horiz, interiorWidth));
                     Console.Write(topRight);
                 }
-                else if (line == 1)
+                else if (line == 2)
                 {
                     Console.Write(vert);
                     Console.Write(new string(horiz, interiorWidth));
@@ -177,43 +179,53 @@
                 else if (line == height - 1)
                 {
                     Console.Write(botLeft);
-                    Console.Write(new string(horiz, interiorWidth));
+                     Console.Write(new string(horiz, interiorWidth));
                     Console.Write(botRight);
+                }
+                else 
+                { 
+                    Console.Write(vert);
+
+                // What line numbers correspond to the ticket header and details:
+                int ticketLine = 1, evLine = 3, locLine = 4, seatLine = 5;
+                string interior;
+
+                // Decide what to print on this `line`
+                if (line == ticketLine)
+                {
+                    // On the “ticket header” line, we print “TICKET” centered
+                    interior = CenterText("TICKET");  // e.g. “    TICKET    ” so it’s centered in the width
+                }
+                else if (line == evLine)
+                {
+                    // On the event-name line:
+                    // We pad left so that the event name is centered (or roughly centered),
+                    // then pad right to fill up the full interior width.
+                    // (interiorWidth + ev.Length) / 2 gives the target left padding count.
+                    interior = ev.PadLeft((interiorWidth + ev.Length) / 2).PadRight(interiorWidth);
+                }
+                else if (line == locLine)
+                {
+                    // On the location line: same centering logic as for event name
+                    interior = loc.PadLeft((interiorWidth + loc.Length) / 2).PadRight(interiorWidth);
+                }
+                else if (line == seatLine)
+                {
+                    // On the seat line: same centering logic
+                    interior = seat.PadLeft((interiorWidth + seat.Length) / 2).PadRight(interiorWidth);
                 }
                 else
                 {
-                    Console.Write(vert);
-
-                    int ticketLine = 2, evLine = 3, locLine = 4, seatLine = 5;
-                    string interior;
-
-                    if (line == ticketLine)
-                    {
-                        interior = CenterText("TICKET");
-                    }
-                    else if (line == evLine)
-                    {
-                        // Left-align (or center) event name
-                        interior = ev.PadLeft((interiorWidth + ev.Length) / 2).PadRight(interiorWidth);
-                    }
-                    else if (line == locLine)
-                    {
-                        interior = loc.PadLeft((interiorWidth + loc.Length) / 2).PadRight(interiorWidth);
-                    }
-                    else if (line == seatLine)
-                    {
-                        interior = seat.PadLeft((interiorWidth + seat.Length) / 2).PadRight(interiorWidth);
-                    }
-                    else
-                    {
-                        interior = new string(' ', interiorWidth);
-                    }
-
-                    Console.Write(interior);
-                    Console.Write(vert);
+                    // If nothing else has been said, just make the interior all blank for the width of the interiorWidth
+                    interior = new string(' ', interiorWidth);
                 }
 
-                Console.WriteLine();
+                // Now print the “interior” (either the header, or event, or blanks, etc.)
+                Console.Write(interior);
+                Console.Write(vert);
+            }
+
+            Console.WriteLine();
             }
 
             // Restore old colors
